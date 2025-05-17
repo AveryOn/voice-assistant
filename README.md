@@ -5,6 +5,7 @@
 
 ## Структура проекта
 
+```bash
 VOICE-ASSISTANT/
 ├── data/
 │   └── input.txt         #  Текст для озвучивания voicer-over
@@ -20,4 +21,4 @@ VOICE-ASSISTANT/
 │   ├── start-record.sh
 │   └── stop-record.sh
 ├── index.ts
-
+```
