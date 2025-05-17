@@ -35,6 +35,7 @@ coverage/
 *.txt
 *.tsv
 *.json
+*.pid
 !package*.json
 !ts*.json
 !nodemon.json
