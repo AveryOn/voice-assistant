@@ -83,3 +83,11 @@ function stopRecording() {
     setTimeout(mainMenu, 10500);
   });
 }
+
+
+/**
+ * Запускает озвучку подготовленного текста
+ */
+function startVoiceOver(text: string) {
+  console.log(';aaallalalal')
+}
