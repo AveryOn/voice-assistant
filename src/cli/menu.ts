@@ -69,7 +69,8 @@ function stopRecording() {
   }
   isRecording = false;
   const scriptPath = resolve(__dirname, './scripts/stop-record.sh');
-  exec(`bash ${scriptPath}`, (err, stdout: string) => {
+  
+  exec(`bash ${scriptPath}`, async (err, stdout: string) => {
     if (err) {
       console.error('❌ Ошибка при обработке записи:', err);
     } else {
@@ -77,17 +78,30 @@ function stopRecording() {
         console.log('Ничего записано не было. stdout пуст! ->', stdout ?? 'undefined')
         return void 0;
       }
+      console.log('[DEBUG]:: stdout', stdout);
+      
+      await startVoiceOver(stdout)
       console.log(`✅ Озвучка завершена.\nТвой текст: ${stdout}`);
-      fs.rmSync(resolve(__dirname, './input.wav'))
+
     }
     setTimeout(mainMenu, 10500);
   });
 }
 
-
 /**
  * Запускает озвучку подготовленного текста
  */
-function startVoiceOver(text: string) {
-  console.log(';aaallalalal')
+async function startVoiceOver(text: string): Promise<undefined> {
+  return new Promise((res, rej) => {
+    exec(`bash voice-over "${text}"`, (err, stdout: string) => {
+      if(err) {
+        console.log('ERROR', err);
+        return void process.exit(1)
+      }
+      console.log('КОНЕЦ ВОСПРОИЗВЕДЕНИЯ', stdout);
+      
+      // fs.rmSync(resolve(__dirname, './input.wav'))
+      res(void 0)
+    })
+  })
 }
