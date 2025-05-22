@@ -4,6 +4,7 @@ import { clearScreen, showBanner } from './utils.js';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import fs from 'fs'
+import { askGemma } from '../modules/gemma3/stdin.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -75,16 +76,23 @@ function stopRecording() {
       console.error('❌ Ошибка при обработке записи:', err);
     } else {
       if (!stdout) {
-        console.log('Ничего записано не было. stdout пуст! ->', stdout ?? 'undefined')
+        console.error('Ничего записано не было. stdout пуст! ->', stdout ?? 'undefined')
         return void 0;
       }
       console.log('[DEBUG]:: stdout', stdout);
-      
-      await startVoiceOver(stdout)
-      console.log(`✅ Озвучка завершена.\nТвой текст: ${stdout}`);
+
+      // Сначала запрос к нейронной сети (модель: gemma3:1b)
+      const answer = await askGemma(stdout)
+      if(!answer) {
+        console.error('gemma3:1b ничего не ответила, возможно ошибка! ->', stdout ?? 'undefined')
+        return void 0;
+      }
+
+      await startVoiceOver(answer)
+      console.log(`✅ Озвучка завершена.\nGemma3:1b ответиа:: ${answer}`);
 
     }
-    setTimeout(mainMenu, 10500);
+    mainMenu()
   });
 }
 
